@@ -1,0 +1,50 @@
+version: "3.3"
+services:
+    app:
+        build:
+            args:
+                user: dime
+                uid: 1000
+            context: ./
+            dockerfile: ./docker/Dockerfile
+        image: php81
+        container_name: ticket-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./docker/docker-compose/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - ./docker/docker-compose/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+        networks:
+            - ticket
+
+    nginx:
+        image: nginx:alpine
+        container_name: ticket-nginx
+        restart: unless-stopped
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./:/var/www
+            - ./docker/docker-compose/nginx:/etc/nginx/conf.d
+        networks:
+            - ticket
+        links:
+            - app
+
+    db:
+        image: postgres:13-alpine
+        restart: unless-stopped
+        container_name: ticket-db
+        environment:
+            POSTGRES_PASSWORD: policiateste
+        ports:
+            - "5432:5432"
+        volumes:
+            - /home/philipe/postgresdb:/var/lib/postgresql/data
+        networks:
+            - ticket
+
+networks:
+    ticket:
+        driver: bridge
