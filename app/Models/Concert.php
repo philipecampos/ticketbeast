@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string $formatted_date
  * @property string $formatted_start_time
+ *
+ * @method $this published
  */
 class Concert extends Model
 {
@@ -31,6 +33,11 @@ class Concert extends Model
 
     protected $guarded = [];
     protected $dates = ['date'];
+
+    public function scopePublished($query)
+    {
+        return $query->whereNotNull('published_at');
+    }
 
     /*
      * TODAS as formas comentadas funcionam

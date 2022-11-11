@@ -12,7 +12,7 @@ class ConcertsController extends Controller
         /**
          * @var Concert $concert
          */
-        $concert = Concert::find($id);
+        $concert = Concert::published()->findOrFail($id);
 
         return view('concerts.show', [
             'concert' => $concert
