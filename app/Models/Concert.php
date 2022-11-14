@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string $formatted_date
  * @property string $formatted_start_time
+ * @property string $ticket_price_in_dollars
  *
  * @method $this published
  */
