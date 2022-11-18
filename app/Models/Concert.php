@@ -76,5 +76,9 @@ class Concert extends Model
         return Attribute::get(fn($value) => number_format($this->ticket_price / 100, 2));
     }
 
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 
 }
