@@ -30,4 +30,18 @@ class ConcertFactory extends Factory
             'additional_information' => 'Some sample additional information.',
         ];
     }
+
+    public function published(): static
+    {
+        return $this->state([
+            'published_at' => Carbon::parse('-1 week'),
+        ]);
+    }
+
+    public function unpublished(): static
+    {
+        return $this->state([
+            'published_at' => null,
+        ]);
+    }
 }
