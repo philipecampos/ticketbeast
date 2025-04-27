@@ -10,6 +10,8 @@ use Tests\TestCase;
 
 class ConcertTest extends TestCase
 {
+    use DatabaseMigrations;
+
     #[Test]
     public function can_get_formatted_date(): void
     {
@@ -38,5 +40,25 @@ class ConcertTest extends TestCase
         ]);
 
         $this->assertEquals(67.50, $concert->ticket_price_in_dollars);
+    }
+
+    #[Test]
+    public function concerts_with_a_published_at_date_are_published(): void
+    {
+        $publishedConcertA = Concert::factory()->create([
+            'published_at' => Carbon::parse('-1 week'),
+        ]);
+        $publishedConcertB = Concert::factory()->create([
+            'published_at' => Carbon::parse('-1 week'),
+        ]);
+        $unpublishedConcert = Concert::factory()->create([
+            'published_at' => null,
+        ]);
+
+        $publishedConcerts = Concert::published()->get();
+
+        $this->assertTrue($publishedConcerts->contains($publishedConcertA));
+        $this->assertTrue($publishedConcerts->contains($publishedConcertB));
+        $this->assertFalse($publishedConcerts->contains($unpublishedConcert));
     }
 }
