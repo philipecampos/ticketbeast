@@ -2,12 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Models\Concert;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ViewConcertListingTest extends TestCase
 {
+    use DatabaseMigrations;
+
     #[Test]
     public function user_can_view_a_concert_listing(): void
     {
@@ -25,6 +29,8 @@ class ViewConcertListingTest extends TestCase
         ]);
 
         $response = $this->get("/concerts/" . $concert->id);
+
+        $response->assertStatus(200);
 
         $response->assertSee('The Red Chord');
         $response->assertSee('with Animosity and Lethargy');
