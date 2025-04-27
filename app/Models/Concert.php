@@ -29,4 +29,18 @@ class Concert extends Model
             get: fn () => $this->date->format('F j, Y'),
         );
     }
+
+    protected function formattedStartTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->date->format('g:ia'),
+        );
+    }
+
+    protected function ticketPriceInDollars(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => number_format($this->ticket_price / 100, 2),
+        );
+    }
 }
