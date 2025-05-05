@@ -28,7 +28,6 @@ class PurchaseTicketsTest extends TestCase
 
         $response->assertStatus(201);
 
-
         $this->assertEquals(9750, $paymentGateway->totalCharges());
 
         $order = $concert->orders()->where('email', 'john@example.com')->first();
