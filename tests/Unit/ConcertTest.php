@@ -33,7 +33,7 @@ class ConcertTest extends TestCase
     }
 
     #[Test]
-    public function can_get_ticket_price_in_dollars()
+    public function can_get_ticket_price_in_dollars(): void
     {
         $concert = Concert::factory()->make([
             'ticket_price' => 6750,
@@ -63,7 +63,7 @@ class ConcertTest extends TestCase
     }
 
     #[Test]
-    public function can_order_concert_tickets()
+    public function can_order_concert_tickets(): void
     {
         $concert = Concert::factory()->create();
 
@@ -71,5 +71,25 @@ class ConcertTest extends TestCase
 
         $this->assertEquals('jane@example.com', $order->email);
         $this->assertEquals(3, $order->tickets()->count());
+    }
+
+    #[Test]
+    public function can_add_tickets(): void
+    {
+        $concert = Concert::factory()->create();
+
+        $concert->addTickets(50);
+
+        $this->assertEquals(50, $concert->ticketsRemaining());
+    }
+    
+    #[Test]
+    public function tickets_remaining_does_not_include_tickets_associated_with_an_order(): void
+    {
+        $concert = Concert::factory()->create();
+        $concert->addTickets(50);
+        $concert->orderTickets('jane@example.com', 30);
+
+        $this->assertEquals(20, $concert->ticketsRemaining());
     }
 }
