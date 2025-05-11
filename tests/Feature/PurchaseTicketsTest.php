@@ -38,6 +38,8 @@ class PurchaseTicketsTest extends TestCase
     public function customer_can_purchase_concert_tickets_to_a_published_concert(): void
     {
         $concert = Concert::factory()->published()->create(['ticket_price' => 3250]);
+        $concert->addTickets(3);
+
         $response = $this->orderTickets($concert, [
             'email' => 'john@example.com',
             'ticket_quantity' => 3,
@@ -57,6 +59,8 @@ class PurchaseTicketsTest extends TestCase
     public function cannot_purchase_tickets_to_an_unpublished_concert()
     {
         $concert = Concert::factory()->unpublished()->create();
+        $concert->addTickets(3);
+
         $response = $this->orderTickets($concert, [
             'email' => 'john@example.com',
             'ticket_quantity' => 3,
@@ -72,6 +76,7 @@ class PurchaseTicketsTest extends TestCase
     public function an_order_is_not_created_if_payment_fails(): void
     {
         $concert = Concert::factory()->published()->create(['ticket_price' => 3250]);
+        $concert->addTickets(3);
 
         $response = $this->orderTickets($concert, [
             'email' => 'john@example.com',
@@ -81,6 +86,7 @@ class PurchaseTicketsTest extends TestCase
 
         $response->assertStatus(422);
         $order = $concert->orders()->where('email', 'john@example.com')->first();
+        $this->assertNull($order);
     }
 
     #[Test]
